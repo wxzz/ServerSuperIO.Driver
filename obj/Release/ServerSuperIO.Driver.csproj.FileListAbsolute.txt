@@ -1,0 +1,5 @@
+F:\工作目录\工作区\平台软件\ServerSuperIO-v4\trunk\bin\ServerSuperIO.Driver.dll
+F:\工作目录\工作区\平台软件\ServerSuperIO-v4\trunk\bin\ServerSuperIO.Driver.pdb
+F:\工作目录\工作区\平台软件\ServerSuperIO-v4\trunk\ServerSuperIO\ServerSuperIO.Driver\obj\Release\ServerSuperIO.Driver.csprojResolveAssemblyReference.cache
+F:\工作目录\工作区\平台软件\ServerSuperIO-v4\trunk\ServerSuperIO\ServerSuperIO.Driver\obj\Release\ServerSuperIO.Driver.dll
+F:\工作目录\工作区\平台软件\ServerSuperIO-v4\trunk\ServerSuperIO\ServerSuperIO.Driver\obj\Release\ServerSuperIO.Driver.pdb
