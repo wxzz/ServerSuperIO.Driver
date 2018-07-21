@@ -111,14 +111,15 @@ namespace ServerSuperIO.Driver.Tcp
             IModbusMessage requestMessage = _sendObject.ModbusMessage;
             ITag tag = _sendObject.Tag;
             bool deal = false;
-
+            object val = null;
             if (tag.Function == Modbus.Modbus.ReadCoils)
             {
                 #region
                 bool[] responseVals = _modbusTcpMaster.GetReadCoilsResponse(revData, tag.Quantity, requestMessage);
                 if (responseVals.Length >= 1)
                 {
-                    this.DeviceDynamic.DynamicData.Write(tag.TagName, responseVals[0] == true ? 1 : 0);
+                    val = responseVals[0] == true ? 1 : 0;
+                    this.DeviceDynamic.DynamicData.Write(tag.TagName, val);
                     deal = true;
                 }
                 #endregion
@@ -129,7 +130,8 @@ namespace ServerSuperIO.Driver.Tcp
                 bool[] responseVals = _modbusTcpMaster.GetReadInputsResponse(revData, tag.Quantity, requestMessage);
                 if (responseVals.Length >= 1)
                 {
-                    this.DeviceDynamic.DynamicData.Write(tag.TagName, responseVals[0] == true ? 1 : 0);
+                    val = responseVals[0] == true ? 1 : 0;
+                    this.DeviceDynamic.DynamicData.Write(tag.TagName, val);
                     deal = true;
                 }
                 #endregion
@@ -140,7 +142,8 @@ namespace ServerSuperIO.Driver.Tcp
                 ushort[] responseVals = _modbusTcpMaster.GetReadHoldingRegistersResponse(revData, requestMessage);
                 if (responseVals.Length >= 1)
                 {
-                    this.DeviceDynamic.DynamicData.Write(tag.TagName, responseVals[0]);
+                    val = responseVals[0];
+                    this.DeviceDynamic.DynamicData.Write(tag.TagName, val);
                     deal = true;
                 }
                 #endregion
@@ -151,15 +154,18 @@ namespace ServerSuperIO.Driver.Tcp
                 ushort[] responseVals = _modbusTcpMaster.GetReadInputRegistersResponse(revData, requestMessage);
                 if (responseVals.Length >= 1)
                 {
-                    this.DeviceDynamic.DynamicData.Write(tag.TagName, responseVals[0]);
+                    val = responseVals[0];
+                    this.DeviceDynamic.DynamicData.Write(tag.TagName,val);
                     deal = true;
                 }
                 #endregion
             }
 
-            if(deal)
+            if(deal && val!=null)
             {
-                OnDeviceRuningLog("通讯正常，已经处理数据");
+                OnDeviceRuningLog("通讯正常，已经处理数据,值：" + (val == null ? "未知" : val.ToString()));
+
+                this.DeviceDynamic.Save();
             }
         }
 

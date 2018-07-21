@@ -113,6 +113,7 @@ namespace ServerSuperIO.Driver.Serial
             IModbusMessage requestMessage = _sendObject.ModbusMessage;
             ITag tag = _sendObject.Tag;
             bool deal = false;
+            object val = null;
             if (tag.Function == Modbus.Modbus.ReadCoils)
             {
                 #region
@@ -121,7 +122,8 @@ namespace ServerSuperIO.Driver.Serial
                     bool[] responseVals = _modbusRtuMaster.GetReadCoilsResponse(revData, tag.Quantity, requestMessage);
                     if (responseVals.Length >= 1)
                     {
-                        this.DeviceDynamic.DynamicData.Write(tag.TagName, responseVals[0] == true ? 1 : 0);
+                        val = responseVals[0] == true ? 1 : 0;
+                        this.DeviceDynamic.DynamicData.Write(tag.TagName, val);
                         deal = true;
                     }
                 }
@@ -130,7 +132,8 @@ namespace ServerSuperIO.Driver.Serial
                     bool[] responseVals = _modbusAsciiMaster.GetReadCoilsResponse(revData, tag.Quantity, requestMessage);
                     if (responseVals.Length >= 1)
                     {
-                        this.DeviceDynamic.DynamicData.Write(tag.TagName, responseVals[0] == true ? 1 : 0);
+                        val = responseVals[0] == true ? 1 : 0;
+                        this.DeviceDynamic.DynamicData.Write(tag.TagName, val);
                         deal = true;
                     }
                 }
@@ -144,7 +147,8 @@ namespace ServerSuperIO.Driver.Serial
                     bool[] responseVals = _modbusRtuMaster.GetReadInputsResponse(revData, tag.Quantity, requestMessage);
                     if (responseVals.Length >= 1)
                     {
-                        this.DeviceDynamic.DynamicData.Write(tag.TagName, responseVals[0] == true ? 1 : 0);
+                        val = responseVals[0] == true ? 1 : 0;
+                        this.DeviceDynamic.DynamicData.Write(tag.TagName, val);
                         deal = true;
                     }
                 }
@@ -153,7 +157,8 @@ namespace ServerSuperIO.Driver.Serial
                     bool[] responseVals = _modbusAsciiMaster.GetReadInputsResponse(revData, tag.Quantity, requestMessage);
                     if (responseVals.Length >= 1)
                     {
-                        this.DeviceDynamic.DynamicData.Write(tag.TagName, responseVals[0] == true ? 1 : 0);
+                        val = responseVals[0] == true ? 1 : 0;
+                        this.DeviceDynamic.DynamicData.Write(tag.TagName, val);
                         deal = true;
                     }
                 }
@@ -167,7 +172,8 @@ namespace ServerSuperIO.Driver.Serial
                     ushort[] responseVals = _modbusRtuMaster.GetReadHoldingRegistersResponse(revData,requestMessage);
                     if (responseVals.Length >= 1)
                     {
-                        this.DeviceDynamic.DynamicData.Write(tag.TagName, responseVals[0]);
+                        val = responseVals[0];
+                        this.DeviceDynamic.DynamicData.Write(tag.TagName, val);
                         deal = true;
                     }
                 }
@@ -176,7 +182,8 @@ namespace ServerSuperIO.Driver.Serial
                     ushort[] responseVals = _modbusAsciiMaster.GetReadHoldingRegistersResponse(revData,requestMessage);
                     if (responseVals.Length >= 1)
                     {
-                        this.DeviceDynamic.DynamicData.Write(tag.TagName, responseVals[0]);
+                        val = responseVals[0];
+                        this.DeviceDynamic.DynamicData.Write(tag.TagName, val);
                         deal = true;
                     }
                 }
@@ -190,7 +197,8 @@ namespace ServerSuperIO.Driver.Serial
                     ushort[] responseVals = _modbusRtuMaster.GetReadInputRegistersResponse(revData, requestMessage);
                     if (responseVals.Length >= 1)
                     {
-                        this.DeviceDynamic.DynamicData.Write(tag.TagName, responseVals[0]);
+                        val = responseVals[0];
+                        this.DeviceDynamic.DynamicData.Write(tag.TagName, val);
                         deal = true;
                     }
                 }
@@ -199,16 +207,19 @@ namespace ServerSuperIO.Driver.Serial
                     ushort[] responseVals = _modbusAsciiMaster.GetReadInputRegistersResponse(revData, requestMessage);
                     if (responseVals.Length >= 1)
                     {
-                        this.DeviceDynamic.DynamicData.Write(tag.TagName, responseVals[0]);
+                        val = responseVals[0];
+                        this.DeviceDynamic.DynamicData.Write(tag.TagName, val);
                         deal = true;
                     }
                 }
                 #endregion
             }
 
-            if(deal)
+            if(deal && val!=null)
             {
-                OnDeviceRuningLog("通讯正常，已经处理数据");
+                OnDeviceRuningLog("通讯正常，已经处理数据,值："+(val==null?"未知":val.ToString()));
+
+                this.DeviceDynamic.Save();
             }
         }
 
